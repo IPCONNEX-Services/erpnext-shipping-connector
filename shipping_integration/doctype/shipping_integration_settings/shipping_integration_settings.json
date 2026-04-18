@@ -1,0 +1,95 @@
+{
+ "doctype": "DocType",
+ "name": "Shipping Integration Settings",
+ "module": "Shipping Integration",
+ "issingle": 1,
+ "fields": [
+  {
+   "fieldname": "eshipper_section",
+   "fieldtype": "Section Break",
+   "label": "eShipper API"
+  },
+  {
+   "fieldname": "eshipper_api_url",
+   "fieldtype": "Data",
+   "label": "API Base URL",
+   "reqd": 1,
+   "description": "e.g. https://api.eshipper.com"
+  },
+  {
+   "fieldname": "eshipper_client_id",
+   "fieldtype": "Data",
+   "label": "Client ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "eshipper_client_secret",
+   "fieldtype": "Password",
+   "label": "Client Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "qtsi_api_key",
+   "fieldtype": "Password",
+   "label": "QTSI API Key",
+   "description": "Secret key QTSI sends in X-Shipping-Key header"
+  },
+  {
+   "fieldname": "origin_section",
+   "fieldtype": "Section Break",
+   "label": "Default Origin (IPCONNEX Warehouse)"
+  },
+  {
+   "fieldname": "default_origin_street",
+   "fieldtype": "Data",
+   "label": "Street",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_origin_city",
+   "fieldtype": "Data",
+   "label": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_origin_province",
+   "fieldtype": "Data",
+   "label": "Province",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_origin_postal",
+   "fieldtype": "Data",
+   "label": "Postal Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_origin_country",
+   "fieldtype": "Data",
+   "label": "Country",
+   "default": "CA"
+  },
+  {
+   "fieldname": "suppliers_section",
+   "fieldtype": "Section Break",
+   "label": "Supplier Warehouse Mapping"
+  },
+  {
+   "fieldname": "supplier_warehouse_map",
+   "fieldtype": "Table",
+   "label": "Supplier Warehouses",
+   "options": "Supplier Warehouse Map"
+  }
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1}
+ ]
+}
