@@ -40,12 +40,12 @@ The OAuth2 client secret. Stored encrypted in the database — never returned in
 
 ---
 
-## QTSI API Key
+## Caller API Key
 
-### `qtsi_api_key`
+### `caller_api_key`
 **Type:** Password | **Required:** Yes (endpoint refuses all requests if unset)
 
-A secret shared between this app and the calling system (e.g. QTSI Store). The caller sends it in the `X-Shipping-Key` HTTP header.
+A secret shared between this app and any authorized calling system. The caller sends it in the `X-Shipping-Key` HTTP header.
 
 **Generating a key:**
 ```bash
@@ -123,7 +123,7 @@ Items whose Preferred Supplier is **Acme Networking** will be shipped from Missi
 
 - [ ] eShipper API URL set and reachable
 - [ ] eShipper Client ID + Secret saved
-- [ ] QTSI API Key generated and shared with calling system
+- [ ] Caller API Key generated and shared with calling system
 - [ ] Default origin warehouse address complete
 - [ ] Supplier Warehouse Map rows added for all direct-ship suppliers
 - [ ] Test a rate request (see [api.md](api.md))

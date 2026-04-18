@@ -14,7 +14,7 @@ POST /api/method/shipping_integration.api.get_rates
 
 ## Authentication
 
-Every request must include the pre-shared API key in the `X-Shipping-Key` header. The key is configured in **Shipping Integration Settings → QTSI API Key**.
+Every request must include the pre-shared API key in the `X-Shipping-Key` header. The key is configured in **Shipping Integration Settings → Caller API Key**.
 
 ```
 X-Shipping-Key: <your-api-key>
@@ -22,7 +22,7 @@ X-Shipping-Key: <your-api-key>
 
 If the header is missing, empty, or does not match the stored key, the endpoint returns **401 Unauthorized**.
 
-If the `qtsi_api_key` field in Settings is not configured, the endpoint refuses all requests — it will never fall open.
+If the `caller_api_key` field in Settings is not configured, the endpoint refuses all requests — it will never fall open.
 
 ---
 

@@ -14,7 +14,7 @@ def get_rates(items=None, destination=None):
     """
     settings = frappe.get_single("Shipping Integration Settings")
 
-    expected_key = settings.get_password("qtsi_api_key") or ""
+    expected_key = settings.get_password("caller_api_key") or ""
     if not expected_key:
         frappe.throw("Shipping endpoint is not configured", frappe.AuthenticationError)
     provided_key = frappe.request.headers.get("X-Shipping-Key", "")

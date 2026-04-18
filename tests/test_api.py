@@ -149,7 +149,7 @@ def test_get_rates_rejects_wrong_api_key(frappe_stub):
 
 
 def test_get_rates_rejects_missing_api_key_config(frappe_stub):
-    """If qtsi_api_key is not configured in Settings → endpoint refuses."""
+    """If caller_api_key is not configured in Settings → endpoint refuses."""
     _make_settings(frappe_stub, api_key="")
     frappe_stub.AuthenticationError = Exception
     frappe_stub.throw.side_effect = frappe_stub.AuthenticationError

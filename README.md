@@ -55,11 +55,11 @@ Navigate to **Shipping Integration Settings** in ERPNext and fill in the followi
 
 > Get these from the eShipper portal under **Account → API Access**.
 
-### 2. QTSI API Key
+### 2. Caller API Key
 
 | Field | Description |
 |---|---|
-| QTSI API Key | Secret key sent by the calling system in the `X-Shipping-Key` header |
+| Caller API Key | Secret key sent by any authorized calling system in the `X-Shipping-Key` header |
 
 Generate a strong random string (e.g. `openssl rand -hex 32`) and share it with the calling system.
 
@@ -88,7 +88,7 @@ Add one row per supplier that ships from a different location than the default w
 | Postal Code | Postal code |
 | Country | Defaults to `CA` |
 
-See [docs/configuration.md](docs/configuration.md) for a detailed field reference.
+See [docs/configuration.md](docs/configuration.md) for a detailed field reference and [docs/connecting.md](docs/connecting.md) for integration instructions.
 
 ---
 
@@ -157,7 +157,7 @@ Total = sum of averaged rates across all groups
 ## Architecture
 
 ```
-Caller (e.g. QTSI Store)
+Caller (e.g. any authorized system)
         │
         │  POST /api/method/shipping_integration.api.get_rates
         │  X-Shipping-Key: <key>

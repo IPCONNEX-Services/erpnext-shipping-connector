@@ -33,10 +33,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "qtsi_api_key",
+   "fieldname": "caller_api_key",
    "fieldtype": "Password",
-   "label": "QTSI API Key",
-   "description": "Secret key QTSI sends in X-Shipping-Key header"
+   "label": "Caller API Key",
+   "description": "Secret key sent by the calling system in the X-Shipping-Key header"
   },
   {
    "fieldname": "origin_section",
