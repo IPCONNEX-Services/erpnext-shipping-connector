@@ -52,4 +52,4 @@ See [api.md](api.md) for the full request/response schema.
 
 ## Example Integrations
 
-- [QTSI Store](integrations/qtsi.md) — Next.js storefront reading config from its own ERPNext instance
+Integrations are implemented entirely on the calling system's side. See [api.md](api.md) for the request/response contract any system must implement.

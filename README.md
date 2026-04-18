@@ -100,7 +100,7 @@ See [docs/api.md](docs/api.md) for the full reference with curl examples.
 
 ```
 POST /api/method/shipping_integration.api.get_rates
-X-Shipping-Key: <your-qtsi-api-key>
+X-Shipping-Key: <your-api-key>
 Content-Type: application/json
 
 {
