@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install ruff
+        run: pip install ruff
+      - name: Lint
+        run: ruff check shipping_integration/
+      - name: Format check
+        run: ruff format --check shipping_integration/
+
+  import-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check imports
+        run: python -c "import shipping_integration"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pytest
+        run: pip install pytest pytest-mock
+      - name: Run tests
+        run: pytest tests/ -v
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, import-check, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract changelog section
+        id: cl
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          NOTES=$(awk "/^## v${VERSION}/,/^## v[0-9]/" CHANGELOG.md | head -n -1 | tail -n +2)
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.cl.outputs.notes }}
