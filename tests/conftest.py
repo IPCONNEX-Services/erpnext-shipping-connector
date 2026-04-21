@@ -18,8 +18,6 @@ def _make_frappe_stub():
     return stub
 
 
-# Module-level stub so shipping_integration.api / eshipper can be imported
-# at collection time before any fixture fires.
 _initial_stub = _make_frappe_stub()
 sys.modules.setdefault("frappe", _initial_stub)
 
@@ -29,7 +27,7 @@ def frappe_stub():
     stub = _make_frappe_stub()
     sys.modules["frappe"] = stub
     import shipping_integration.api as _api_mod
-    import shipping_integration.eshipper as _eshipper_mod
+    import shipping_integration.carriers.eshipper as _eshipper_mod
     _api_mod.frappe = stub
     _eshipper_mod.frappe = stub
     yield stub

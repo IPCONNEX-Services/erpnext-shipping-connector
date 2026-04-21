@@ -1,10 +1,10 @@
-from . import dhl, ups, fedex, purolator, canada_post
-
-_ALL = [dhl, ups, fedex, purolator, canada_post]
-
-
 class CarrierError(Exception):
     pass
+
+
+from . import eshipper, dhl, ups, fedex, purolator, canada_post  # noqa: E402
+
+_ALL = [eshipper, dhl, ups, fedex, purolator, canada_post]
 
 
 def active_carriers():
