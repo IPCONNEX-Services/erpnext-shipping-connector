@@ -44,38 +44,12 @@
    "label": "Default Origin (IPCONNEX Warehouse)"
   },
   {
-   "fieldname": "default_origin_street",
-   "fieldtype": "Data",
-   "label": "Street",
-   "reqd": 1
-  },
-  {
-   "fieldname": "default_origin_city",
-   "fieldtype": "Data",
-   "label": "City",
-   "reqd": 1
-  },
-  {
-   "fieldname": "col_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "default_origin_province",
-   "fieldtype": "Data",
-   "label": "Province",
-   "reqd": 1
-  },
-  {
-   "fieldname": "default_origin_postal",
-   "fieldtype": "Data",
-   "label": "Postal Code",
-   "reqd": 1
-  },
-  {
-   "fieldname": "default_origin_country",
-   "fieldtype": "Data",
-   "label": "Country",
-   "default": "CA"
+   "fieldname": "default_origin_address",
+   "fieldtype": "Link",
+   "label": "Default Origin Address",
+   "options": "Address",
+   "reqd": 1,
+   "description": "Select the ERPNext Address record for the default shipping origin"
   },
   {
    "fieldname": "suppliers_section",

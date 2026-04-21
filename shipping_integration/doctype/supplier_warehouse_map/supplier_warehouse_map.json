@@ -13,36 +13,12 @@
    "in_list_view": 1
   },
   {
-   "fieldname": "street",
-   "fieldtype": "Data",
-   "label": "Street",
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "label": "Warehouse Address",
+   "options": "Address",
    "reqd": 1,
    "in_list_view": 1
-  },
-  {
-   "fieldname": "city",
-   "fieldtype": "Data",
-   "label": "City",
-   "reqd": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "province",
-   "fieldtype": "Data",
-   "label": "Province",
-   "reqd": 1
-  },
-  {
-   "fieldname": "postal_code",
-   "fieldtype": "Data",
-   "label": "Postal Code",
-   "reqd": 1
-  },
-  {
-   "fieldname": "country",
-   "fieldtype": "Data",
-   "label": "Country",
-   "default": "CA"
   }
  ],
  "permissions": []

@@ -55,35 +55,38 @@ def get_rates(items=None, destination=None):
     return {"rate": round(total_rate, 2), "currency": "CAD"}
 
 
+def _resolve_address(address_name: str) -> dict:
+    """Fetch an ERPNext Address doc and return eShipper-compatible origin dict."""
+    addr = frappe.get_doc("Address", address_name)
+    country_code = (frappe.db.get_value("Country", addr.country, "code") or "ca").upper()
+    return {
+        "street": addr.address_line1,
+        "city": addr.city,
+        "province": addr.state,
+        "postal_code": addr.pincode,
+        "country": country_code,
+    }
+
+
 def _group_by_origin(items: list, settings) -> list:
     """
     Returns [{origin: dict, packages: list}] — one entry per unique origin.
     Items with no supplier match fall back to the IPCONNEX default warehouse.
     """
     supplier_map = {
-        row.supplier: {
-            "street": row.street,
-            "city": row.city,
-            "province": row.province,
-            "postal_code": row.postal_code,
-            "country": row.country or "CA",
-        }
+        row.supplier: row.address
         for row in (settings.get("supplier_warehouse_map") or [])
     }
 
-    default_origin = {
-        "street": settings.default_origin_street,
-        "city": settings.default_origin_city,
-        "province": settings.default_origin_province,
-        "postal_code": settings.default_origin_postal,
-        "country": settings.default_origin_country or "CA",
-    }
+    default_address_name = settings.default_origin_address
+    default_origin = _resolve_address(default_address_name)
 
     by_key: dict = {}
     for item in items:
         supplier = frappe.db.get_value("Item", item.get("item_code"), "preferred_supplier") or ""
-        origin = supplier_map.get(supplier, default_origin)
-        key = f"{origin['street']}|{origin['postal_code']}"
+        address_name = supplier_map.get(supplier)
+        origin = _resolve_address(address_name) if address_name else default_origin
+        key = address_name or default_address_name
 
         if key not in by_key:
             by_key[key] = {"origin": origin, "packages": []}
