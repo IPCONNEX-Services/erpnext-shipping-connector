@@ -1,0 +1,37 @@
+{
+  "doctype": "DocType",
+  "name": "eShipper Settings",
+  "module": "Shipping Integration",
+  "issingle": 1,
+  "fields": [
+    {
+      "fieldname": "enabled",
+      "fieldtype": "Check",
+      "label": "Enabled",
+      "default": "0"
+    },
+    {
+      "fieldname": "api_url",
+      "fieldtype": "Data",
+      "label": "API Base URL",
+      "description": "e.g. https://api.eshipper.com"
+    },
+    {
+      "fieldname": "client_id",
+      "fieldtype": "Data",
+      "label": "Client ID"
+    },
+    {
+      "fieldname": "col_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "client_secret",
+      "fieldtype": "Password",
+      "label": "Client Secret"
+    }
+  ],
+  "permissions": [
+    {"role": "System Manager", "read": 1, "write": 1, "create": 1}
+  ]
+}
