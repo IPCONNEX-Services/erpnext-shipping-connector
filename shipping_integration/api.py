@@ -1,7 +1,9 @@
 import hmac
 import json
 import frappe
-from shipping_integration import eshipper
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
+from shipping_integration.carriers import active_carriers
+from shipping_integration.carriers.errors import CarrierError
 
 
 @frappe.whitelist(allow_guest=True)
@@ -10,7 +12,7 @@ def get_rates(items=None, destination=None):
     POST /api/method/shipping_integration.api.get_rates
     Headers: X-Shipping-Key: <key>
     Body: {items: [...], destination: {...}}
-    Returns: {rate: float, currency: "CAD"}
+    Returns: {rates: [{carrier, rate, currency}, ...], errors: [{carrier, error}, ...]}
     """
     settings = frappe.get_single("Shipping Integration Settings")
 
@@ -33,30 +35,66 @@ def get_rates(items=None, destination=None):
         frappe.throw("Invalid JSON in items or destination")
 
     groups = _group_by_origin(items, settings)
+    carriers = active_carriers()
 
-    total_rate = 0.0
-    for group in groups:
-        try:
-            rates = eshipper.get_rates(group["origin"], destination, group["packages"])
-            if rates:
-                total_rate += sum(rates) / len(rates)
-            else:
-                frappe.log_error(
-                    f"No rates returned for origin {group['origin'].get('city')}",
-                    "Shipping Integration",
-                )
-        except eshipper.EShipperError as exc:
-            frappe.log_error(str(exc), "Shipping Integration eShipper Error")
-            frappe.throw(f"Could not reach shipping service: {exc}")
-        except Exception as exc:
-            frappe.log_error(str(exc), "Shipping Integration Unexpected Error")
-            frappe.throw("An unexpected error occurred while fetching shipping rates")
+    if not carriers:
+        return {"rates": [], "errors": []}
 
-    return {"rate": round(total_rate, 2), "currency": "CAD"}
+    return _fan_out(carriers, groups, destination)
+
+
+def _fan_out(carriers, groups, destination):
+    errors = []
+    carrier_totals = {}
+
+    with ThreadPoolExecutor(max_workers=max(len(carriers) * len(groups), 1)) as executor:
+        carrier_futures = {
+            c: [
+                executor.submit(c.get_rates, g["origin"], destination, g["packages"])
+                for g in groups
+            ]
+            for c in carriers
+        }
+
+        for carrier, group_futures in carrier_futures.items():
+            carrier_name = getattr(carrier, "_CARRIER_NAME", None) or getattr(carrier, "__name__", "unknown")
+            total = 0.0
+            failed = False
+
+            for fut in group_futures:
+                try:
+                    rates = fut.result(timeout=15)
+                    if not rates:
+                        failed = True
+                        break
+                    total += min(r["rate"] for r in rates)
+                except FuturesTimeoutError:
+                    frappe.log_error(f"{carrier_name} timed out", "Shipping Integration")
+                    errors.append({"carrier": carrier_name, "error": "timeout"})
+                    failed = True
+                    break
+                except CarrierError as exc:
+                    frappe.log_error(str(exc), f"Shipping Integration {carrier_name}")
+                    errors.append({"carrier": carrier_name, "error": str(exc)})
+                    failed = True
+                    break
+                except Exception as exc:
+                    frappe.log_error(str(exc), f"Shipping Integration {carrier_name}")
+                    errors.append({"carrier": carrier_name, "error": "unexpected error"})
+                    failed = True
+                    break
+
+            if not failed:
+                carrier_totals[carrier_name] = round(total, 2)
+
+    rates = sorted(
+        [{"carrier": name, "rate": rate, "currency": "CAD"} for name, rate in carrier_totals.items()],
+        key=lambda r: r["rate"],
+    )
+    return {"rates": rates, "errors": errors}
 
 
 def _resolve_address(address_name: str) -> dict:
-    """Fetch an ERPNext Address doc and return eShipper-compatible origin dict."""
     addr = frappe.get_doc("Address", address_name)
     country_code = (frappe.db.get_value("Country", addr.country, "code") or "ca").upper()
     return {
@@ -69,10 +107,6 @@ def _resolve_address(address_name: str) -> dict:
 
 
 def _group_by_origin(items: list, settings) -> list:
-    """
-    Returns [{origin: dict, packages: list}] — one entry per unique origin.
-    Items with no supplier match fall back to the IPCONNEX default warehouse.
-    """
     supplier_map = {
         row.supplier: row.address
         for row in (settings.get("supplier_warehouse_map") or [])
