@@ -1,0 +1,2 @@
+class CarrierError(Exception):
+    pass

@@ -1,7 +1,7 @@
 import frappe
 import requests
 from datetime import date
-from shipping_integration.carriers import CarrierError
+from shipping_integration.carriers.errors import CarrierError
 
 _CACHE_KEY = "eshipper_access_token"
 _CARRIER_NAME = "eShipper"
@@ -35,11 +35,11 @@ def _get_token() -> str:
         resp.raise_for_status()
         data = resp.json()
         token = data["access_token"]
+        expires_in = max(int(data.get("expires_in", 3600)) - 60, 60)
+        frappe.cache().set_value(_CACHE_KEY, token, expires_in_sec=expires_in)
     except (requests.RequestException, KeyError, ValueError) as exc:
         raise CarrierError(f"eShipper auth failed: {exc}") from exc
 
-    expires_in = max(int(data.get("expires_in", 3600)) - 60, 60)
-    frappe.cache().set_value(_CACHE_KEY, token, expires_in_sec=expires_in)
     return token
 
 

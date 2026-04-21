@@ -1,8 +1,5 @@
-class CarrierError(Exception):
-    pass
-
-
-from . import eshipper, dhl, ups, fedex, purolator, canada_post  # noqa: E402
+from .errors import CarrierError
+from . import eshipper, dhl, ups, fedex, purolator, canada_post
 
 _ALL = [eshipper, dhl, ups, fedex, purolator, canada_post]
 
