@@ -7,30 +7,7 @@
   {
    "fieldname": "eshipper_section",
    "fieldtype": "Section Break",
-   "label": "eShipper API"
-  },
-  {
-   "fieldname": "eshipper_api_url",
-   "fieldtype": "Data",
-   "label": "API Base URL",
-   "reqd": 1,
-   "description": "e.g. https://api.eshipper.com"
-  },
-  {
-   "fieldname": "eshipper_client_id",
-   "fieldtype": "Data",
-   "label": "Client ID",
-   "reqd": 1
-  },
-  {
-   "fieldname": "col_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "eshipper_client_secret",
-   "fieldtype": "Password",
-   "label": "Client Secret",
-   "reqd": 1
+   "label": "Caller Authentication"
   },
   {
    "fieldname": "caller_api_key",
