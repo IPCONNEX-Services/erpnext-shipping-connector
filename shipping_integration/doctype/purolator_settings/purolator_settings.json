@@ -1,0 +1,13 @@
+{
+  "doctype": "DocType",
+  "name": "Purolator Settings",
+  "module": "Shipping Integration",
+  "issingle": 1,
+  "fields": [
+    {"fieldname": "enabled", "fieldtype": "Check", "label": "Enabled", "default": "0"},
+    {"fieldname": "api_key", "fieldtype": "Password", "label": "API Key"},
+    {"fieldname": "password", "fieldtype": "Password", "label": "Password"},
+    {"fieldname": "account_number", "fieldtype": "Data", "label": "Account Number"}
+  ],
+  "permissions": [{"role": "System Manager", "read": 1, "write": 1, "create": 1}]
+}

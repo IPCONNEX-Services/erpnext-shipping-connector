@@ -1,0 +1,13 @@
+{
+  "doctype": "DocType",
+  "name": "UPS Settings",
+  "module": "Shipping Integration",
+  "issingle": 1,
+  "fields": [
+    {"fieldname": "enabled", "fieldtype": "Check", "label": "Enabled", "default": "0"},
+    {"fieldname": "client_id", "fieldtype": "Data", "label": "Client ID"},
+    {"fieldname": "client_secret", "fieldtype": "Password", "label": "Client Secret"},
+    {"fieldname": "account_number", "fieldtype": "Data", "label": "Account Number"}
+  ],
+  "permissions": [{"role": "System Manager", "read": 1, "write": 1, "create": 1}]
+}

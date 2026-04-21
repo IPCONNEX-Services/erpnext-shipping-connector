@@ -1,0 +1,13 @@
+{
+  "doctype": "DocType",
+  "name": "Canada Post Settings",
+  "module": "Shipping Integration",
+  "issingle": 1,
+  "fields": [
+    {"fieldname": "enabled", "fieldtype": "Check", "label": "Enabled", "default": "0"},
+    {"fieldname": "username", "fieldtype": "Data", "label": "Username"},
+    {"fieldname": "password", "fieldtype": "Password", "label": "Password"},
+    {"fieldname": "customer_number", "fieldtype": "Data", "label": "Customer Number"}
+  ],
+  "permissions": [{"role": "System Manager", "read": 1, "write": 1, "create": 1}]
+}
